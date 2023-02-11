@@ -19,15 +19,6 @@ class LazyView(object):
     def view(self):
         return import_string(self.import_name)
 
-    # def __call__(self, *args, **kwargs):
-    #     from flask import request
-    #     response = self.view_with_middleware(*args, **kwargs)
-    #     if settings.LOG_LEVEL > 0:
-    #         log_message = "request: {}\nresponse: {}".format(
-    #             json.dumps(serialize_flask_request(request), indent=4, default=default_converter),
-    #             json.dumps(serialize_flask_response(response), indent=4, default=default_converter))
-    #         if response.status_code >= 400:
-    #             app.logger.error(log_message)
-    #         elif response.status_code < 400 and settings.LOG_LEVEL > 1:
-    #             app.logger.info(log_message)
-    #     return response
+    def __call__(self, *args, **kwargs):
+        response = self.view_with_middleware(*args, **kwargs)
+        return response
