@@ -1,9 +1,13 @@
-from utils.enums import DbType
-from database.db_clients.db_client_factory import DbClientFactory
+from controllers.customer import CustomerController
+from models.model import BookingRequest, CustomerInfo
 from flask import request
+from flask_pydantic import validate
 
 
+@validate(body=CustomerInfo)
 def create_customer():
-    db = DbClientFactory.get_db_instance(DbType.MYSQL)
-    new_customer = request.json()
-    return {}
+    customer_info = request.get_json()
+    customer_controller = CustomerController()
+    response = customer_controller.create_customer(customer_info)
+    return response
+

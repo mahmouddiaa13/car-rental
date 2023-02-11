@@ -4,14 +4,28 @@ from database.db_connections.mysql_conn import MysqlConn
 
 class MysqlDbClient(BaseDBClient):
     def __init__(self):
-        db = MysqlConn()
-        self.cursor = db.init_conn()
+        mysql_db = MysqlConn()
+        self.db = mysql_db.init_conn()
+        self.cursor = self.db.cursor()
 
     def find_one(self, table_name: str, query: dict):
-        pass
+        items = list(query.items())
+        key, value = items.pop(0)
+        find_query = f"SELECT * FROM {table_name} WHERE {key} = {value}"
+        for key, value in items:
+            find_query += f" AND {key} = {value}"
+        self.cursor.execute(find_query)
+        return self.cursor.fetchone()
 
     def insert(self, table_name: str, query: dict):
-        pass
+        keys_list = list(query.keys())
+        keys = keys_list.pop(0)
+        for key in keys_list:
+            keys += "," + key
+        values = tuple(query.values())
+        insert_query = f"INSERT INTO {table_name} ({keys}) VALUES {values}"
+        self.cursor.execute(insert_query)
+        self.db.commit()
 
     def update(self, table_name: str, filter_query: dict, update_query: dict):
         pass
@@ -21,3 +35,4 @@ class MysqlDbClient(BaseDBClient):
 
     def delete(self, table_name: str, query: dict):
         pass
+

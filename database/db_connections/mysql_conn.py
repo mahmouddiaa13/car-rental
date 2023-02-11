@@ -35,5 +35,5 @@ class MysqlConn(metaclass=SingletonMeta):
     def init_conn(self):
         db = self.get_connection()
         self.check_conn(db)
-        cursor = db.cursor()
-        return cursor
+        # cursor = db.cursor()
+        return db
