@@ -11,3 +11,8 @@ def create_customer():
     response = customer_controller.create_customer(customer_info)
     return response
 
+
+def get_customer(customer_id: int):
+    customer_controller = CustomerController()
+    response = customer_controller.get_customer(customer_id)
+    return response

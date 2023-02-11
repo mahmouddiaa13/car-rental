@@ -19,3 +19,10 @@ class CustomerController:
         return Response(response=json.dumps({"success": True}), status=status_code.HTTP_202_ACCEPTED,
                         mimetype='application/json')
 
+    def get_customer(self, customer_id: int):
+        customer_info = self.db.get_customer_info(customer_id)
+        if not customer_info:
+            return Response(response=json.dumps({"errors": "not found!!"}), status=status_code.HTTP_400_BAD_REQUEST,
+                            mimetype='application/json')
+        return Response(response=json.dumps({"success": "True"}), status=status_code.HTTP_200_OK,
+                        mimetype='application/json')

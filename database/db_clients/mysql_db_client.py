@@ -36,3 +36,11 @@ class MysqlDbClient(BaseDBClient):
     def delete(self, table_name: str, query: dict):
         pass
 
+    def get_customer_info(self, customer_id: int):
+        try:
+            query = """SELECT * FROM customer LEFT JOIN booking ON customer.id = booking.customer_id WHERE customer.id={}""".format(
+                customer_id)
+            self.cursor.execute(query)
+            return self.cursor.fetchone()
+        except Exception as err:
+            print(err.__repr__())
