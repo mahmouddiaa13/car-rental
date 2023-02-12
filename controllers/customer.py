@@ -26,3 +26,6 @@ class CustomerController:
                             mimetype='application/json')
         return Response(response=json.dumps({"success": "True"}), status=status_code.HTTP_200_OK,
                         mimetype='application/json')
+
+    def delete_customer(self, customer_id: int):
+        self.db.delete("customer", {"id": customer_id})

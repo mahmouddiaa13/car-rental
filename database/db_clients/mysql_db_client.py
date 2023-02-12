@@ -34,7 +34,13 @@ class MysqlDbClient(BaseDBClient):
         pass
 
     def delete(self, table_name: str, query: dict):
-        pass
+        items = list(query.items())
+        key, value = items.pop(0)
+        delete_query = f"DELETE FROM {table_name} WHERE {key} = {value}"
+        for key, value in items:
+            delete_query += f" AND {key} = {value}"
+        self.cursor.execute(delete_query)
+        self.db.commit()
 
     def get_customer_info(self, customer_id: int):
         try:
