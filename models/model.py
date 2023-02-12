@@ -10,7 +10,6 @@ class CustomerInfo(BaseModel):
 
 
 class BookingInfo(BaseModel):
-    vehicle_id: int
     hire_date: str
     return_date: str
     is_paid: bool

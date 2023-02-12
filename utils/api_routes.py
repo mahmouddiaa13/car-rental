@@ -16,4 +16,7 @@ class ApiRoutes:
 
         app.add_url_rule("/api/v1/customer/<int:customer_id>", methods=['DELETE'],
                          view_func=LazyView('api.v1.customer.delete_customer'))
+
+        app.add_url_rule("/api/v1/customer/book/<int:vehicle_id>", methods=['POST'],
+                         view_func=LazyView('api.v1.customer.book_vehicle'))
         return app

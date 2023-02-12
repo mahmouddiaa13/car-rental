@@ -15,17 +15,26 @@ class MysqlDbClient(BaseDBClient):
         for key, value in items:
             find_query += f" AND {key} = {value}"
         self.cursor.execute(find_query)
-        return self.cursor.fetchone()
+        result = self.cursor.fetchone()
+        if result:
+            return result[0]
+        else:
+            return None
 
     def insert(self, table_name: str, query: dict):
-        keys_list = list(query.keys())
-        keys = keys_list.pop(0)
-        for key in keys_list:
-            keys += "," + key
-        values = tuple(query.values())
-        insert_query = f"INSERT INTO {table_name} ({keys}) VALUES {values}"
-        self.cursor.execute(insert_query)
-        self.db.commit()
+        try:
+            keys_list = list(query.keys())
+            keys = keys_list.pop(0)
+            for key in keys_list:
+                keys += "," + key
+            values = tuple(query.values())
+            insert_query = f"INSERT INTO {table_name} ({keys}) VALUES {values}"
+            self.cursor.execute(insert_query)
+            self.db.commit()
+            return self.cursor.lastrowid
+        except Exception as err:
+            print(err.__repr__())
+            return False
 
     def update(self, table_name: str, filter_query: dict, update_query: dict):
         pass
@@ -50,3 +59,13 @@ class MysqlDbClient(BaseDBClient):
             return self.cursor.fetchone()
         except Exception as err:
             print(err.__repr__())
+
+    def is_vehicle_available(self, vehicle_id, hire_date, return_date):
+        try:
+            query = """SELECT * FROM booking WHERE booking.vehicle_id={} AND NOT ('{}' >= booking.return_date OR '{}' <= booking.hire_date) """.format(
+            vehicle_id, hire_date, return_date)
+            self.cursor.execute(query)
+            return self.cursor.fetchone()
+        except Exception as err:
+            print(err.__repr__())
+            return None

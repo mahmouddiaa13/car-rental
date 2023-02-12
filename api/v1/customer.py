@@ -26,3 +26,17 @@ def delete_customer(customer_id: int):
     customer_controller.delete_customer(customer_id)
     return Response(response=json.dumps({"success": "True"}), status=status_code.HTTP_204_NO_CONTENT,
                     mimetype='application/json')
+
+
+@validate(body=BookingRequest)
+def book_vehicle(vehicle_id: int):
+    booking_request = request.get_json()
+    customer_info = booking_request["customer_info"]
+    booking_info = booking_request["booking_info"]
+    customer_controller = CustomerController()
+    result = customer_controller.book_vehicle(customer_info, booking_info, vehicle_id)
+    if not result:
+        return Response(response=json.dumps({"errors": "Invalid date"}), status=400,
+                        mimetype='application/json')
+    return Response(response=json.dumps({"success": "True"}), status=status_code.HTTP_200_OK,
+                    mimetype='application/json')
